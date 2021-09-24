@@ -3,7 +3,6 @@ import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
 import cors from "cors";
-
 import models from './models';
 import schema from './schema';
 import resolvers from './resolvers';
