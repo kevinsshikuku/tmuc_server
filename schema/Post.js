@@ -10,18 +10,9 @@ const PostSchema = gql`
     title: String
     message: String
     image: String
-    email:String
-    imagePublicId: String
-    authorPic: String
-    authorName: String
+    author: User
     createdAt: String
-    updatedAt: String
   }
-
-  # -----------------Return Payloads----------------------------------------
-
-
-
 
 
 
@@ -46,9 +37,7 @@ const PostSchema = gql`
             title: String
             message:String
             image: Upload
-            email: String
-            authorName: String
-            authorPic:String
+            authorId:String
      ): Post
 
     # Deletes a user post

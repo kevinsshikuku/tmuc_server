@@ -9,11 +9,12 @@ const postSchema = Schema(
   {
     message: String,
     title: String,
-    authorName: String,
-    authorPic: String,
-    email: String,
     image: String,
-    imagePublicId:String,
+    imagePublicId: String,
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

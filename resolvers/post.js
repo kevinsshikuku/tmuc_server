@@ -76,13 +76,16 @@ const Mutation = {
    */
   createPost: async (
     _,
-    {  title, message, image,email, authorPic, authorName }, { Post }) => {
+    {  title, message, authorId, image }, { Post, User }) => {
     if (!title) {
        throw new UserInputError('Give a Title of your Notice');
     }else if(!message){
        throw new UserInputError('Give Discription of your Notice');
     }
-
+    // if(!authorId){
+    //   throw new UserInputError("Provide authorId")
+    // }
+   const author = User.findById(authorId);
 //image upload logic
     let imageUrl, imagePublicId;
     if (image) {
@@ -94,16 +97,20 @@ const Mutation = {
     const newPost = await new Post({
       title,
       message,
-      authorName,
-      authorPic,
+      author:authorId,
       image: imageUrl,
       imagePublicId,
-      email
     }).save();
 
     pubSub.publish(NEW_POST, {
           newPost: newPost
         })
+
+// find a user from model and update post field
+    await User.findOneAndUpdate(
+      { _id: authorId },
+      { $push: { posts: newPost.id } }
+    );
 
     return newPost;
   },
