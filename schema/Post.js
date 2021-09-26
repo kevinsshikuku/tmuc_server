@@ -10,6 +10,7 @@ const PostSchema = gql`
     title: String
     message: String
     image: String
+    name:String
     author: User
     createdAt: String
   }
@@ -37,6 +38,7 @@ const PostSchema = gql`
             title: String
             message:String
             image: Upload
+            name:String
             authorId:String
      ): Post
 

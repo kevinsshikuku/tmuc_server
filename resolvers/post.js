@@ -76,16 +76,12 @@ const Mutation = {
    */
   createPost: async (
     _,
-    {  title, message, authorId, image }, { Post, User }) => {
+    {  title, message, authorId, name, image }, { Post, User }) => {
     if (!title) {
        throw new UserInputError('Give a Title of your Notice');
     }else if(!message){
        throw new UserInputError('Give Discription of your Notice');
     }
-    // if(!authorId){
-    //   throw new UserInputError("Provide authorId")
-    // }
-   const author = User.findById(authorId);
 //image upload logic
     let imageUrl, imagePublicId;
     if (image) {
@@ -97,6 +93,7 @@ const Mutation = {
     const newPost = await new Post({
       title,
       message,
+      name,
       author:authorId,
       image: imageUrl,
       imagePublicId,
