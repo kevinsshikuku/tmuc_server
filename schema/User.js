@@ -9,13 +9,9 @@ const UserSchema = gql`
   # -----------------Model Objects----------------------------------------
   type User {
     id: ID!
-    image: String
-    phonenumber: String!
     name: String!
+    username: String
     password: String!
-    resetToken: String
-    imagePublicId: String
-    resetTokenExpiry: String
     posts: [Post]
     createdAt: String
     updatedAt: String
@@ -49,16 +45,15 @@ const UserSchema = gql`
   extend type Mutation {
     # Signs in user
     signin(
-        phoneOrname: String!
+        name: String!
         password: String!
      ): Token
 
     # Signs up new user
     signup(
-        phonenumber: String!
-        name: String!
-        password: String!
-        confirmPassword: String!
+        name: String
+        password: String
+        confirmPassword: String
      ): Token
   }
 `;

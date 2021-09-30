@@ -8,12 +8,6 @@ const Schema = mongoose.Schema;
  */
 const userSchema = new Schema(
   {
-    phonenumber: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-    },
     name: {
       type: String,
       trim: true,
@@ -21,14 +15,11 @@ const userSchema = new Schema(
       required: true,
       lowercase: true,
     },
-    passwordResetToken: String,
-    passwordResetTokenExpiry: Date,
+    username: String,
     password: {
       type: String,
       required: true,
     },
-    image: String,
-    imagePublicId: String,
     posts: [
       {
         type: Schema.Types.ObjectId,

@@ -12,6 +12,7 @@ const Query = {
    */
   getPosts: async (_, { skip, limit }, { Post }) => {
     const allPosts = await Post.find()
+      .populate({path:"author"})
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: 'desc' });
@@ -58,6 +59,7 @@ const Query = {
    */
   getPost: async (_, { id }, { Post }) => {
     const post = await Post.findById(id)
+    .populate({path: "author"})
     return post;
   },
 };
@@ -65,7 +67,7 @@ const Query = {
 
 
 const Mutation = {
-  /* -------------------------------------------------------------------------- */
+  /* ---------------------create post----------------------------------------------------- */
   /**
    * Creates a new post
    * @param {string} title
@@ -77,11 +79,13 @@ const Mutation = {
   createPost: async (
     _,
     {  title, message, authorId, name, image }, { Post, User }) => {
+
     if (!title) {
        throw new UserInputError('Give a Title of your Notice');
     }else if(!message){
        throw new UserInputError('Give Discription of your Notice');
     }
+
 //image upload logic
     let imageUrl, imagePublicId;
     if (image) {
@@ -99,9 +103,7 @@ const Mutation = {
       imagePublicId,
     }).save();
 
-    pubSub.publish(NEW_POST, {
-          newPost: newPost
-        })
+
 
 // find a user from model and update post field
     await User.findOneAndUpdate(
@@ -109,7 +111,16 @@ const Mutation = {
       { $push: { posts: newPost.id } }
     );
 
-    return newPost;
+// post to be return after mutation
+  const post = await Post.findById(newPost.id)
+        .populate({path:"author"});
+
+
+   pubSub.publish(NEW_POST, {
+          newPost: post
+        })
+
+    return post;
   },
 
 
@@ -120,8 +131,9 @@ const Mutation = {
    * @param {string} id
    * @param {imagePublicId} id
    */
-  deletePost: async (_,{ id, imagePublicId },{ Post, Like, User, Comment, Notification }) => {
-    // Remove post image from cloudinary, if imagePublicId is present
+  deletePost: async (_,{ id, imagePublicId },{ Post, User }) => {
+
+ // Remove post image from cloudinary, if imagePublicId is present
     if (imagePublicId) {
       const deleteImage = await deleteFromCloudinary(imagePublicId);
 
@@ -134,43 +146,15 @@ const Mutation = {
 
 // Find post and remove it
  const post = await Post.findByIdAndRemove(id);
-    // Delete post from authors (users) posts collection
+
+// Delete post from authors (users) posts collection
     await User.findOneAndUpdate(
       { _id: post.author},
       { $pull: { posts: post.id } }
     );
 
 
-// Delete post likes from likes collection
-    await Like.find({ post: post.id }).deleteMany();
-    // Delete post likes from users collection
-    post.likes.map(async likeId => {
-      await User.where({ likes: likeId }).updateMany({ $pull: { likes: likeId } });
-    });
-
-
-// Delete post comments from comments collection
-    await Comment.find({ post: post.id }).deleteMany();
-    // Delete comments from users collection
-    post.comments.map(async commentId => {
-      await User.where({ comments: commentId }).updateMany({
-        $pull: { comments: commentId },
-      });
-    });
-
-
-    // Find user notification in users collection and remove them
-    const userNotifications = await Notification.find({ post: post.id });
-
-    userNotifications.map(async notification => {
-      await User.where({ notifications: notification.id }).update({
-        $pull: { notifications: notification.id },
-      });
-    });
-    // Remove notifications from notifications collection
-    await Notification.find({ post: post.id }).deleteMany();
-
-    return post;
+    return true;
   },
 };
 

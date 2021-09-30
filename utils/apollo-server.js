@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { ApolloServer } from 'apollo-server-express';
 import { PubSub } from 'apollo-server-express';
-import { request } from 'express';
 
 
 
@@ -18,10 +17,10 @@ export const pubSub = new PubSub();
 
 
 
-const checkAuthorization = auth => {
+const checkAuthorization = (auth) => {
   if(auth){
     try{
-        const authUser =  jwt.verify(auth, process.env.SECRET);
+        const authUser = jwt.verify(auth, process.env.SECRET);
         if(authUser){
           return authUser;
         }else{
@@ -53,7 +52,7 @@ export const createApolloServer = (schema, resolvers, models) => {
       let authUser;
       if (req.headers.authorization !== "null") {
         const auth = req.headers.authorization;
-        const user =  await checkAuthorization(auth);
+        const user =  checkAuthorization(auth);
         if (user) {
             authUser = user;
         }

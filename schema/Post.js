@@ -10,11 +10,11 @@ const PostSchema = gql`
     title: String
     message: String
     image: String
+    imagePublicId:String
     name:String
     author: User
     createdAt: String
   }
-
 
 
   # ------------------Queries---------------------------------------
@@ -43,7 +43,7 @@ const PostSchema = gql`
      ): Post
 
     # Deletes a user post
-    deletePost( id: ID! imagePublicId: String ):Post
+    deletePost( id: ID! imagePublicId: String ):Boolean
   }
 
   # --------------Subscriptions-------------------------------------------
