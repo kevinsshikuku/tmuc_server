@@ -54,6 +54,6 @@ server.installSubscriptionHandlers(httpServer);
 // Listen to HTTP and WebSocket server
 const PORT = process.env.PORT || process.env.API_PORT;
 httpServer.listen(PORT, () => {
-  console.log(`windoshoppe server ready at http://localhost:${PORT}${server.graphqlPath}`);
+  console.log(`tmuc_server server ready at http://localhost:${PORT}${server.graphqlPath}`);
   console.log(`Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
 });

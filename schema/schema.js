@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 import PostSchema from './Post';
 import UserSchema from './User';
+import ViewSchema from './View';
 
 const schema = gql`
   type Query {
@@ -18,5 +19,6 @@ const schema = gql`
 
   ${PostSchema}
   ${UserSchema}
+  ${ViewSchema}
 `;
 export default schema;

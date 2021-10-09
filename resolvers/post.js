@@ -11,12 +11,13 @@ const Query = {
    * @param {int} limit how many posts to limit
    */
   getPosts: async (_, { skip, limit }, { Post }) => {
+
     const allPosts = await Post.find()
-      .populate({path:"author"})
+      .populate( {path: "views"})
+      .populate( {path: "author"})
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: 'desc' });
-
     return allPosts ;
   },
 
@@ -44,11 +45,9 @@ const Query = {
         $ne: authUser.id,
       },
     }).limit(50);
-
     return posts;
   },
 /* -------------------------------------------------------------------------- */
-
 
 
 
@@ -60,6 +59,7 @@ const Query = {
   getPost: async (_, { id }, { Post }) => {
     const post = await Post.findById(id)
     .populate({path: "author"})
+    .populate( {path: "views"})
     return post;
   },
 };
@@ -113,7 +113,8 @@ const Mutation = {
 
 // post to be return after mutation
   const post = await Post.findById(newPost.id)
-        .populate({path:"author"});
+        .populate({path:"author"})
+        .populate({path:"views"});
 
 
    pubSub.publish(NEW_POST, {
@@ -124,14 +125,13 @@ const Mutation = {
   },
 
 
-
 /* -----------------------------deletePost--------------------------------------------- */
   /**
    * Deletes a user post
    * @param {string} id
    * @param {imagePublicId} id
    */
-  deletePost: async (_,{ id, imagePublicId },{ Post, User }) => {
+  deletePost: async (_,{ id, authUserId, imagePublicId },{ Post, User }) => {
 
  // Remove post image from cloudinary, if imagePublicId is present
     if (imagePublicId) {
@@ -149,10 +149,9 @@ const Mutation = {
 
 // Delete post from authors (users) posts collection
     await User.findOneAndUpdate(
-      { _id: post.author},
+      { _id: authUserId},
       { $pull: { posts: post.id } }
     );
-
 
     return true;
   },

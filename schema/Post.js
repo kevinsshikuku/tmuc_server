@@ -13,9 +13,9 @@ const PostSchema = gql`
     imagePublicId:String
     name:String
     author: User
+    views: [ ViewPayload]
     createdAt: String
   }
-
 
   # ------------------Queries---------------------------------------
   extend type Query {
@@ -42,9 +42,12 @@ const PostSchema = gql`
             authorId:String
      ): Post
 
+
     # Deletes a user post
-    deletePost( id: ID! imagePublicId: String ):Boolean
+    deletePost( id: ID! authUserId: ID imagePublicId: String ):Boolean
   }
+
+
 
   # --------------Subscriptions-------------------------------------------
   extend type Subscription {

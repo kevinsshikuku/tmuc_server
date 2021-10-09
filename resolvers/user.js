@@ -18,7 +18,7 @@ const Query = {
     const user = await User.findById(authUser.id)
       .populate({
         path: 'posts',
-        populate: [ { path: 'author'} ],
+        populate: [ { path: 'author'}, { path:'views'} ],
         options: { sort: { createdAt: 'desc' } },
       })
     return user;
@@ -41,7 +41,7 @@ const Query = {
     const user = await User.findOne(query)
       .populate({
         path: 'posts',
-        populate: [{ path: 'author' }],
+        populate: [{ path: 'author' }, { path:'views'}],
         options: { sort: { createdAt: 'desc' } },
       })
 
@@ -64,7 +64,7 @@ const Query = {
     const users = await User.find()
     .populate({
         path: 'posts',
-        populate: [{ path: 'author' }],
+        populate: [{ path: 'author' }, { path:'views'}],
         options: { sort: { createdAt: 'desc' } },
       })
       .skip(skip)
