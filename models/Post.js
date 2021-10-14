@@ -11,6 +11,10 @@ const postSchema = Schema(
     title: String,
     image: String,
     imagePublicId: String,
+    replies: [{
+      type: Schema.Types.ObjectId,
+      ref:"Reply"
+    }],
     views: [{
       type: Schema.Types.ObjectId,
       ref:"View"

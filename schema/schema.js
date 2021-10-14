@@ -3,6 +3,7 @@ import { gql } from 'apollo-server-express';
 import PostSchema from './Post';
 import UserSchema from './User';
 import ViewSchema from './View';
+import ReplySchema from "./Reply"
 
 const schema = gql`
   type Query {
@@ -20,5 +21,6 @@ const schema = gql`
   ${PostSchema}
   ${UserSchema}
   ${ViewSchema}
+  ${ReplySchema}
 `;
 export default schema;

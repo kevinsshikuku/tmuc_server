@@ -15,6 +15,10 @@ const Query = {
     const allPosts = await Post.find()
       .populate( {path: "views"})
       .populate( {path: "author"})
+      .populate( {
+        path: "replies",
+        options: { sort: { createdAt: 'desc' } },
+        })
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: 'desc' });
@@ -60,6 +64,10 @@ const Query = {
     const post = await Post.findById(id)
     .populate({path: "author"})
     .populate( {path: "views"})
+    .populate( {
+      path: "replies",
+      options: { sort: { createdAt: 'desc' } },
+      })
     return post;
   },
 };
@@ -114,7 +122,8 @@ const Mutation = {
 // post to be return after mutation
   const post = await Post.findById(newPost.id)
         .populate({path:"author"})
-        .populate({path:"views"});
+        .populate({path:"views"})
+        .populate({path:"replies"});
 
 
    pubSub.publish(NEW_POST, {
@@ -131,7 +140,7 @@ const Mutation = {
    * @param {string} id
    * @param {imagePublicId} id
    */
-  deletePost: async (_,{ id, authUserId, imagePublicId },{ Post, User }) => {
+  deletePost: async (_,{ id, authUserId, imagePublicId },{ Post, User , Reply}) => {
 
  // Remove post image from cloudinary, if imagePublicId is present
     if (imagePublicId) {
@@ -146,6 +155,9 @@ const Mutation = {
 
 // Find post and remove it
  const post = await Post.findByIdAndRemove(id);
+
+//Delet post replies
+    await Reply.deleteMany({post: post.id})
 
 // Delete post from authors (users) posts collection
     await User.findOneAndUpdate(

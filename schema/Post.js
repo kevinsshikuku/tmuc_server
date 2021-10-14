@@ -13,6 +13,7 @@ const PostSchema = gql`
     imagePublicId:String
     name:String
     author: User
+    replies:[Reply]
     views: [ ViewPayload]
     createdAt: String
   }
