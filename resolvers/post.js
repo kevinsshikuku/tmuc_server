@@ -179,7 +179,6 @@ const Subscription = {
     // subscribe: ()  => pubSub.asyncIterator("NEW_POST"),
     subscribe: () => pubSub.asyncIterator("NEW_POST")
   }
-
 };
 
 export default { Query, Mutation, Subscription };

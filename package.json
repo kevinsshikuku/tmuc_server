@@ -2,7 +2,7 @@
   "name": "tmuc-server",
   "version": "0.1.0",
   "engines": {
-    "node": "14.17.3"
+    "node": "16.13.0"
   },
   "private": true,
   "main": "index.js",
@@ -29,6 +29,7 @@
     "lodash": "^4.17.19",
     "mongoose": "^5.7.0",
     "nodemailer": "^6.2.1",
+    "short-unique-id": "^4.4.4",
     "subscriptions-transport-ws": "^0.9.16",
     "uuidv4": "^6.2.6"
   },
